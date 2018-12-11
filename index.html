@@ -29,30 +29,6 @@
       </tr>
     </thead>
     <tbody class="list">
-      <tr>
-        <td class="time">20141203</td>
-        <td class="rating">20</td>
-        <td class="tags">#life</td>
-        <td class="description"><a href="https://www.google.com/">google<a>, this is google.</td>
-      </tr>
-      <tr>
-        <td class="time">20171203</td>
-        <td class="rating">01</td>
-        <td class="tags">#info</td>
-        <td class="description"><a href="https://www.facebook.com/">facebook<a>, this is facebook.</td>
-      </tr>
-      <tr>
-        <td class="time">20181103</td>
-        <td class="rating">99</td>
-        <td class="tags">#game, #time</td>
-        <td class="description"><a href="https://www.youtube.com/">youtube<a>, this is youtube.</td>
-      </tr>
-      <tr>
-        <td class="time">20181204</td>
-        <td class="rating">80</td>
-        <td class="tags">#game</td>
-        <td class="description"><a href="https://www.github.com/">github<a>, this is github.</td>
-      </tr>
     </tbody>
   </table>
 </div>
@@ -63,10 +39,39 @@
 <script src="js/bootstrap.min.js"></script>
 
 <script>
-  var options = {
-    valueNames: [ 'time', 'rating', 'tags', 'description' ]
-  };
-  var userList = new List('files', options);
+var values = [
+  {
+    time: 20141203,
+    rating: 20,
+    tags: "#life",
+    description: '<a href="https://www.google.com/">google<a>, this is google.'
+  },
+  {
+    time: 20171203,
+    rating: 1,
+    tags: "#info",
+    description: '<a href="https://www.facebook.com/">facebook<a>, this is facebook.'
+  },
+  {
+    time: 20181103,
+    rating: 99,
+    tags: "#game, #time",
+    description: '<a href="https://www.youtube.com/">youtube<a>, this is youtube.'
+  },
+  {
+    time: 20181204,
+    rating: 80,
+    tags: "#game",
+    description: '<a href="https://www.github.com/">github<a>, this is github.'
+  }
+];
+
+var options = {
+  valueNames: [ 'time', 'rating', 'tags', 'description' ],
+  item: '<tr><td class="time"></td><td class="rating"></td><td class="tags"></td><td class="description"></td></tr>'
+};
+var fileList = new List('files', options, values);
+
 </script>
 
 </body>
