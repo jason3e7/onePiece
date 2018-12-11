@@ -10,28 +10,48 @@
 </head>
 
 <body>
-<div id="users">
-  <input class="search" placeholder="Search" />
-  <button class="sort" data-sort="name">Sort by name</button>
-  <button class="sort" data-sort="born">Sort by born</button>
-  <table>
-    <!-- IMPORTANT, class="list" have to be at tbody -->
+<div class="jumbotron">
+  <div class="container">
+    <h1 class="display-3">All in One</h1>
+  </div>
+</div>
+<div class="container" id="files">
+  <div class="input-group mb-3">
+    <input class="fuzzy-search form-control"  placeholder="Search" />
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" class="sort" data-sort="time">Time</th>
+        <th scope="col" class="sort" data-sort="rating">Rating</th>
+        <th scope="col" class="sort" data-sort="tags">Tags</th>
+        <th scope="col" class="sort" data-sort="description">Description</th>
+      </tr>
+    </thead>
     <tbody class="list">
       <tr>
-        <td class="name">Jonny Stromberg</td>
-        <td class="born">1986</td>
+        <td class="time">20141203</td>
+        <td class="rating">20</td>
+        <td class="tags">#life</td>
+        <td class="description"><a href="https://www.google.com/">google<a>, this is google.</td>
       </tr>
       <tr>
-        <td class="name">Jonas Arnklint</td>
-        <td class="born">1985</td>
+        <td class="time">20171203</td>
+        <td class="rating">01</td>
+        <td class="tags">#info</td>
+        <td class="description"><a href="https://www.facebook.com/">facebook<a>, this is facebook.</td>
       </tr>
       <tr>
-        <td class="name">Martina Elm</td>
-        <td class="born">1986</td>
+        <td class="time">20181103</td>
+        <td class="rating">99</td>
+        <td class="tags">#game, #time</td>
+        <td class="description"><a href="https://www.youtube.com/">youtube<a>, this is youtube.</td>
       </tr>
       <tr>
-        <td class="name">Gustaf Lindqvist</td>
-        <td class="born">1983</td>
+        <td class="time">20181204</td>
+        <td class="rating">80</td>
+        <td class="tags">#game</td>
+        <td class="description"><a href="https://www.github.com/">github<a>, this is github.</td>
       </tr>
     </tbody>
   </table>
@@ -44,9 +64,9 @@
 
 <script>
   var options = {
-    valueNames: [ 'name', 'born' ]
+    valueNames: [ 'time', 'rating', 'tags', 'description' ]
   };
-  var userList = new List('users', options);
+  var userList = new List('files', options);
 </script>
 
 </body>
