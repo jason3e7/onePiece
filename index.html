@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>one piece</title>
-<script src="js/list.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+
+  <title>one piece</title>  
 </head>
 
 <body>
 <div id="users">
   <input class="search" placeholder="Search" />
-  <button class="sort" data-sort="name">
-    Sort by name
-  </button>
+  <button class="sort" data-sort="name">Sort by name</button>
+  <button class="sort" data-sort="born">Sort by born</button>
   <table>
     <!-- IMPORTANT, class="list" have to be at tbody -->
     <tbody class="list">
@@ -34,6 +36,11 @@
     </tbody>
   </table>
 </div>
+
+<script src="js/list.js"></script>
+<script src="js/jquery-3.3.1.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 
 <script>
   var options = {
