@@ -22,8 +22,9 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col" class="sort" data-sort="time">Time</th>
+        <th scope="col" class="sort" data-sort="time">Modify Time</th>
         <th scope="col" class="sort" data-sort="rating">Rating</th>
+        <th scope="col" class="sort" data-sort="type">Type</th>
         <th scope="col" class="sort" data-sort="tags">Tags</th>
         <th scope="col" class="sort" data-sort="description">Description</th>
       </tr>
@@ -41,34 +42,38 @@
 <script>
 var values = [
   {
-    time: 20141203,
+    mtime: 20141203,
     rating: 20,
+    type: "link",
     tags: "#life",
     description: '<a href="https://www.google.com/">google<a>, this is google.'
   },
   {
-    time: 20171203,
+    mtime: 20171203,
     rating: 1,
+    type: "link",
     tags: "#info",
     description: '<a href="https://www.facebook.com/">facebook<a>, this is facebook.'
   },
   {
-    time: 20181103,
+    mtime: 20181103,
     rating: 99,
+    type: "link",
     tags: "#game, #time",
     description: '<a href="https://www.youtube.com/">youtube<a>, this is youtube.'
   },
   {
-    time: 20181204,
+    mtime: 20181204,
     rating: 80,
+    type: "link",
     tags: "#game",
     description: '<a href="https://www.github.com/">github<a>, this is github.'
   }
 ];
 
 var options = {
-  valueNames: [ 'time', 'rating', 'tags', 'description' ],
-  item: '<tr><td class="time"></td><td class="rating"></td><td class="tags"></td><td class="description"></td></tr>'
+  valueNames: [ 'mtime', 'rating', 'type', 'tags', 'description' ],
+  item: '<tr><td class="mtime"></td><td class="rating"></td><td class="type"></td><td class="tags"></td><td class="description"></td></tr>'
 };
 var fileList = new List('files', options, values);
 
