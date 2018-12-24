@@ -24,7 +24,7 @@
       <tr>
         <th scope="col" class="sort" data-sort="time">Modify Time</th>
         <th scope="col" class="sort" data-sort="rating">Rating</th>
-        <th scope="col" class="sort" data-sort="type">Type</th>
+        <th scope="col" class="sort" data-sort="ftype">File Type</th>
         <th scope="col" class="sort" data-sort="tags">Tags</th>
         <th scope="col" class="sort" data-sort="description">Description</th>
       </tr>
@@ -44,38 +44,71 @@ var values = [
   {
     mtime: 20141203,
     rating: 20,
-    type: "link",
+    ftype: "link",
     tags: "#life",
     description: '<a href="https://www.google.com/">google<a>, this is google.'
   },
   {
     mtime: 20171203,
     rating: 1,
-    type: "link",
+    ftype: "link",
     tags: "#info",
     description: '<a href="https://www.facebook.com/">facebook<a>, this is facebook.'
   },
   {
     mtime: 20181103,
     rating: 99,
-    type: "link",
+    ftype: "link",
     tags: "#game, #time",
     description: '<a href="https://www.youtube.com/">youtube<a>, this is youtube.'
   },
   {
     mtime: 20181204,
     rating: 80,
-    type: "link",
+    ftype: "link",
     tags: "#game",
     description: '<a href="https://www.github.com/">github<a>, this is github.'
   }
 ];
 
-var options = {
-  valueNames: [ 'mtime', 'rating', 'type', 'tags', 'description' ],
-  item: '<tr><td class="mtime"></td><td class="rating"></td><td class="type"></td><td class="tags"></td><td class="description"></td></tr>'
+function loadFile(filepath, cbFunction) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      cbFunction(this);
+    }
+  };
+  xhttp.open("GET", filepath, true);
+  xhttp.send();
 };
-var fileList = new List('files', options, values);
+
+function parseMD(text) {
+  var lines = text.split('\n');
+  for(var i = 0; i < lines.length; i+=2){
+    var element = new Object();
+    
+    element.mtime = lines[i].match(/\\#mtime:(\w*)/is)[1];
+    element.rating = lines[i].match(/\\#rating:(\w*)/is)[1];
+    element.ftype = lines[i].match(/\\#type:(\w*)/is)[1];
+    element.tags = lines[i].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
+    link = lines[i].match(/\[([^\[]+)\]\(([^\)]+)\)/);
+    element.description = "<a href='" + link[2] + "'>" + link[1] + "</a>";
+    element.description += lines[i + 1].match(/  \* (.*)/is)[1];
+
+    values.push(element)
+  }
+}
+
+
+loadFile("index.md", function(xhttp){
+  parseMD(xhttp.responseText);
+
+  var options = {
+  valueNames: [ 'mtime', 'rating', 'ftype', 'tags', 'description' ],
+  item: '<tr><td class="mtime"></td><td class="rating"></td><td class="ftype"></td><td class="tags"></td><td class="description"></td></tr>'
+  };
+  var fileList = new List('files', options, values);
+});
 
 </script>
 
