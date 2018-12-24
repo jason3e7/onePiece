@@ -40,37 +40,7 @@
 <script src="js/bootstrap.min.js"></script>
 
 <script>
-var values = [
-  {
-    mtime: 20141203,
-    rating: 20,
-    ftype: "link",
-    tags: "#life",
-    description: '<a href="https://www.google.com/">google<a>, this is google.'
-  },
-  {
-    mtime: 20171203,
-    rating: 1,
-    ftype: "link",
-    tags: "#info",
-    description: '<a href="https://www.facebook.com/">facebook<a>, this is facebook.'
-  },
-  {
-    mtime: 20181103,
-    rating: 99,
-    ftype: "link",
-    tags: "#game, #time",
-    description: '<a href="https://www.youtube.com/">youtube<a>, this is youtube.'
-  },
-  {
-    mtime: 20181204,
-    rating: 80,
-    ftype: "link",
-    tags: "#game",
-    description: '<a href="https://www.github.com/">github<a>, this is github.'
-  }
-];
-
+var values = [];
 var dirCount = 0;
 
 function loadFile(basepath, callback) {
@@ -113,7 +83,7 @@ function parseMD(basepath, text, callback) {
   callback();
 }
 
-loadFile("./", function(basepath, xhttp) {
+loadFile("", function(basepath, xhttp) {
   parseMD(basepath, xhttp.responseText, render);
 });
 
