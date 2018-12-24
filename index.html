@@ -71,18 +71,22 @@ var values = [
   }
 ];
 
-function loadFile(filepath, cbFunction) {
+var dirCount = 0;
+
+function loadFile(basepath, callback) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      cbFunction(this);
+      callback(basepath, this);
     }
   };
-  xhttp.open("GET", filepath, true);
+  xhttp.open("GET", basepath + "index.md", true);
   xhttp.send();
 };
 
-function parseMD(text) {
+function parseMD(basepath, text, callback) {
+  //console.log("parseMD");
+  //console.log(basepath);
   var lines = text.split('\n');
   for(var i = 0; i < lines.length; i+=2){
     var element = new Object();
@@ -92,23 +96,40 @@ function parseMD(text) {
     element.ftype = lines[i].match(/\\#type:(\w*)/is)[1];
     element.tags = lines[i].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
     link = lines[i].match(/\[([^\[]+)\]\(([^\)]+)\)/);
-    element.description = "<a href='" + link[2] + "'>" + link[1] + "</a>";
+    path = basepath + link[2];
+    element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
     element.description += lines[i + 1].match(/  \* (.*)/is)[1];
 
-    values.push(element)
+    if(element.ftype === "dir") {
+      //console.log(path);
+      dirCount = dirCount + 1;
+      loadFile(path + "/", function(basepath, xhttp){
+        //console.log(basepath);
+        parseMD(basepath, xhttp.responseText, render);
+      });
+    }
+    values.push(element);
   }
+  callback();
 }
 
-
-loadFile("index.md", function(xhttp){
-  parseMD(xhttp.responseText);
-
-  var options = {
-  valueNames: [ 'mtime', 'rating', 'ftype', 'tags', 'description' ],
-  item: '<tr><td class="mtime"></td><td class="rating"></td><td class="ftype"></td><td class="tags"></td><td class="description"></td></tr>'
-  };
-  var fileList = new List('files', options, values);
+loadFile("./", function(basepath, xhttp) {
+  parseMD(basepath, xhttp.responseText, render);
 });
+
+
+function render() {
+  //console.log(dirCount);
+  if(dirCount === 0) {
+    var options = {
+    valueNames: [ 'mtime', 'rating', 'ftype', 'tags', 'description' ],
+    item: '<tr><td class="mtime"></td><td class="rating"></td><td class="ftype"></td><td class="tags"></td><td class="description"></td></tr>'
+    };
+    var fileList = new List('files', options, values);
+  } else {
+    dirCount = dirCount - 1;
+  }
+};
 
 </script>
 
