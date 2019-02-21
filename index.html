@@ -17,7 +17,15 @@
 </div>
 <div class="container" id="files">
   <div class="input-group mb-3">
-    <input class="fuzzy-search form-control"  placeholder="Search" />
+    <input class="form-control" id="search" placeholder="Search" />
+  </div>
+  <div class="input-group mb-3">
+    <input class="form-control" id="ratingFilter" placeholder="Rating Filter">&nbsp;
+    <button class="btn btn-success" onclick="doSearch();">Apply</button>&nbsp;
+    <button class="btn btn-danger" onclick="resetList();">Clear</button>
+  </div>
+  <div class="input-group mb-3">
+    <div id="output"></div>
   </div>
   <table class="table">
     <thead>
@@ -55,10 +63,12 @@ function loadFile(basepath, callback) {
 };
 
 function parseMD(basepath, text, callback) {
-  //console.log("parseMD");
-  //console.log(basepath);
   var lines = text.split('\n');
   for(var i = 0; i < lines.length; i+=2){
+    if(lines[i] === "") {
+      continue;
+    }
+
     var element = new Object();
     
     element.mtime = lines[i].match(/\\#mtime:(\w*)/is)[1];
@@ -67,6 +77,9 @@ function parseMD(basepath, text, callback) {
     element.tags = lines[i].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
     link = lines[i].match(/\[([^\[]+)\]\(([^\)]+)\)/);
     path = basepath + link[2];
+    if (/^(http|https)?:\/\//i.test(link[2])) {
+      path = link[2];
+    }
     if(element.ftype === "md") {
       element.description = "<a href='remarkable.html?src=" + path + "'>" + link[1] + "</a>, ";
     } else {
@@ -75,10 +88,8 @@ function parseMD(basepath, text, callback) {
     element.description += lines[i + 1].match(/  \* (.*)/is)[1];
 
     if(element.ftype === "dir") {
-      //console.log(path);
       dirCount = dirCount + 1;
       loadFile(path + "/", function(basepath, xhttp){
-        //console.log(basepath);
         parseMD(basepath, xhttp.responseText, render);
       });
     }
@@ -91,19 +102,85 @@ loadFile("", function(basepath, xhttp) {
   parseMD(basepath, xhttp.responseText, render);
 });
 
+var fileList;
+var options = {
+  valueNames: [ 'mtime', 'rating', 'ftype', 'tags', 'description' ],
+  item: '<tr><td class="mtime"></td><td class="rating"></td><td class="ftype"></td><td class="tags"></td><td class="description"></td></tr>',
+  fuzzySearch: {
+    searchClass: "fuzzy-search",
+    location: 0,
+    distance: 1000,
+    threshold: 0.4,
+    multiSearch: true
+  }
+};
 
 function render() {
-  //console.log(dirCount);
   if(dirCount === 0) {
-    var options = {
-    valueNames: [ 'mtime', 'rating', 'ftype', 'tags', 'description' ],
-    item: '<tr><td class="mtime"></td><td class="rating"></td><td class="ftype"></td><td class="tags"></td><td class="description"></td></tr>'
-    };
-    var fileList = new List('files', options, values);
+  
+    fileList = new List('files', options, values);
+
+    fileList.filter(function(item) {
+      if (item.values().ftype == "dir") {
+        return false;
+      }
+      return true;
+    });
+    baseSort();
+
+    showCount();
+    
   } else {
     dirCount = dirCount - 1;
   }
 };
+
+function resetList(){
+  fileList.search();
+  fileList.filter();
+  fileList.update();
+  showCount();
+};
+
+document.getElementById('ratingFilter').addEventListener('change', updateList);
+
+function updateList() {
+  var target = this.value;
+  fileList.filter(function(item) {
+    if (item.values().rating > target) {
+      return false;
+    }
+      return true;
+  });
+  baseSort();
+  
+}
+
+function baseSort() {
+  fileList.sort('rating', { order: "asc" });
+  fileList.sort('mtime', { order: "desc" });
+}
+
+function doSearch() {
+  var target = document.getElementById("search").value;
+  fileList.fuzzySearch(target);
+  showCount();
+}
+
+var input = document.getElementById("search");
+
+input.addEventListener("keyup", function(event) {
+  event.preventDefault();
+  if (event.keyCode === 13) {
+    doSearch();
+    this.blur();
+  }
+});
+
+function showCount() {
+  var output = "About " + fileList.update().matchingItems.length + " results"; 
+  document.getElementById("output").innerText = output;
+}
 
 </script>
 
