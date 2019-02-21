@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/remarkable.js"></script>
+  <script src="js/jquery-3.3.1.js"></script>
+
+  <title>Hello, world!</title>
+</head>
+
+<body>
+<div class="jumbotron">
+  <div class="container">
+    <h1 class="display-3" id="title">Hello, world!</h1>
+  </div>
+</div>
+<div class="container" id="content">
+  <a href="?src=index.md">load markdown from url</a>
+</div>
+
+<script type="text/javascript">
+  function GetURLParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+
+      if (sParameterName[0] === sParam) {
+        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+      }
+    }
+  }
+
+  var src = GetURLParameter('src');
+  if (src != undefined) {
+    $.get(src, function( data ) {
+      var md = new Remarkable();
+      var lines = data.split('\n');
+      var title = lines[0];
+      if(title == null) {
+        title = "Title";
+      }
+      document.title = title;
+      document.getElementById("title").innerHTML = md.render(title);
+      lines.shift();
+      document.getElementById("content").innerHTML = md.render(lines.join('\n'));
+    });
+  }
+</script>
+
+<link rel="stylesheet" href="js/bootstrap.min.js">
+</body>
+
+</html>

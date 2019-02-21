@@ -67,7 +67,11 @@ function parseMD(basepath, text, callback) {
     element.tags = lines[i].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
     link = lines[i].match(/\[([^\[]+)\]\(([^\)]+)\)/);
     path = basepath + link[2];
-    element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
+    if(element.ftype === "md") {
+      element.description = "<a href='remarkable.html?src=" + path + "'>" + link[1] + "</a>, ";
+    } else {
+      element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
+    }
     element.description += lines[i + 1].match(/  \* (.*)/is)[1];
 
     if(element.ftype === "dir") {
