@@ -18,7 +18,8 @@
   </div>
 </div>
 <div class="container" id="content">
-  <a href="?src=index.md">load markdown from url</a>
+  <a href="?src=index.md">load markdown from url</a><br>
+  <a href="?src=sample/index.md">load markdown(image) from url</a>
 </div>
 
 <script type="text/javascript">
@@ -39,13 +40,35 @@
 
   var src = GetURLParameter('src');
   if (src != undefined) {
+    basepath = "";
+    try {
+      basepath = src.match(/(.*\/)/i)[0];  
+    } catch(err) {
+      console.log(err.message);
+    }
     $.get(src, function( data ) {
       var md = new Remarkable();
       var lines = data.split('\n');
+      lines.forEach(function(line, i) {
+        if(/\[.*\]\((.+)\)/i.test(line)) {
+          try {
+            link = line.match(/\[.*\]\((.+)\)/i)[1];
+            console.log(link);
+            if ((/^(\w+)?:\/\//i.test(link)) === false) {
+              lines[i] = lines[i].replace(link, basepath + link);
+            }
+            
+          } catch(err) {
+            console.log(err.message);
+          }
+        }
+      });
+
       var title = lines[0];
       if(title == null) {
         title = "Title";
       }
+
       document.title = title;
       document.getElementById("title").innerHTML = md.render(title);
       lines.shift();
