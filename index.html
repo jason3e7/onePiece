@@ -75,7 +75,7 @@ function parseMD(basepath, text, callback) {
     element.rating = lines[i].match(/\\#rating:(\w*)/is)[1];
     element.ftype = lines[i].match(/\\#type:(\w*)/is)[1];
     element.tags = lines[i].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
-    link = lines[i].match(/\[([^\[]+)\]\(([^\)]+)\)/);
+    link = lines[i].match(/\[(.+)\]\(([^\)]+)\)/);
     path = basepath + link[2];
     if (/^(http|https)?:\/\//i.test(link[2])) {
       path = link[2];
