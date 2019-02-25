@@ -53,9 +53,8 @@
         if(/\[.*\]\((.+)\)/i.test(line)) {
           try {
             link = line.match(/\[.*\]\((.+)\)/i)[1];
-            console.log(link);
             if ((/^(\w+)?:\/\//i.test(link)) === false) {
-              lines[i] = lines[i].replace(link, basepath + link);
+              lines[i] = lines[i].replace("(" + link + ")", "(" + basepath + link + ")");
             }
             
           } catch(err) {
