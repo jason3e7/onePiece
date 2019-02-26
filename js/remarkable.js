@@ -4094,7 +4094,7 @@ rules.image = function(tokens, idx, options /*, env */) {
   var title = tokens[idx].title ? (' title="' + escapeHtml(replaceEntities(tokens[idx].title)) + '"') : '';
   var alt = ' alt="' + (tokens[idx].alt ? escapeHtml(replaceEntities(unescapeMd(tokens[idx].alt))) : '') + '"';
   var suffix = options.xhtmlOut ? ' /' : '';
-  return '<img' + src + alt + title + suffix + '>';
+  return '<img class="img-fluid"' + src + alt + title + suffix + '>';
 };
 
 /**
