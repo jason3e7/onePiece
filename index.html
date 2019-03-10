@@ -64,7 +64,7 @@ function loadFile(basepath, callback) {
 
 function parseMD(basepath, text, callback) {
   var lines = text.split('\n');
-  for(var i = 0; i < lines.length; i+=2){
+  for(var i = 0; i < lines.length; i+=3){
     if(lines[i] === "") {
       continue;
     }
@@ -74,7 +74,7 @@ function parseMD(basepath, text, callback) {
     element.mtime = lines[i].match(/\\#mtime:(\w*)/is)[1];
     element.rating = lines[i].match(/\\#rating:(\w*)/is)[1];
     element.ftype = lines[i].match(/\\#type:(\w*)/is)[1];
-    element.tags = lines[i].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
+    element.tags = lines[i + 1].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
     link = lines[i].match(/\[(.+)\]\(([^\)]+)\)/);
     path = basepath + link[2];
     if (/^(http|https)?:\/\//i.test(link[2])) {
@@ -85,7 +85,7 @@ function parseMD(basepath, text, callback) {
     } else {
       element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
     }
-    element.description += lines[i + 1].match(/  \* (.*)/is)[1];
+    element.description += lines[i + 2].match(/  \* (.*)/is)[1];
 
     if(element.ftype === "dir") {
       dirCount = dirCount + 1;
