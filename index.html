@@ -65,35 +65,40 @@ function loadFile(basepath, callback) {
 function parseMD(basepath, text, callback) {
   var lines = text.split('\n');
   for(var i = 0; i < lines.length; i+=3){
-    if(lines[i] === "") {
+    if(lines[i].trim() === "") {
       continue;
     }
-
-    var element = new Object();
     
-    element.mtime = lines[i].match(/\\#mtime:(\w*)/is)[1];
-    element.rating = lines[i].match(/\\#rating:(\w*)/is)[1];
-    element.ftype = lines[i].match(/\\#type:(\w*)/is)[1];
-    element.tags = lines[i + 1].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
-    link = lines[i].match(/\[(.+)\]\(([^\)]+)\)/);
-    path = basepath + link[2];
-    if (/^(http|https)?:\/\//i.test(link[2])) {
-      path = link[2];
-    }
-    if(element.ftype === "md") {
-      element.description = "<a href='remarkable.html?src=" + path + "'>" + link[1] + "</a>, ";
-    } else {
-      element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
-    }
-    element.description += lines[i + 2].match(/  \* (.*)/is)[1];
+    try {
+      var element = new Object();
+      
+      element.mtime = lines[i].match(/\\#mtime:(\w*)/is)[1];
+      element.rating = lines[i].match(/\\#rating:(\w*)/is)[1];
+      element.ftype = lines[i].match(/\\#type:(\w*)/is)[1];
+      element.tags = lines[i + 1].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
+      link = lines[i].match(/\[(.+)\]\(([^\)]+)\)/);
+      path = basepath + link[2];
+      if (/^(http|https)?:\/\//i.test(link[2])) {
+        path = link[2];
+      }
+      if(element.ftype === "md") {
+        element.description = "<a href='remarkable.html?src=" + path + "'>" + link[1] + "</a>, ";
+      } else {
+        element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
+      }
+      element.description += lines[i + 2].match(/  \* (.*)/is)[1];
 
-    if(element.ftype === "dir") {
-      dirCount = dirCount + 1;
-      loadFile(path + "/", function(basepath, xhttp){
-        parseMD(basepath, xhttp.responseText, render);
-      });
+      if(element.ftype === "dir") {
+        dirCount = dirCount + 1;
+        loadFile(path + "/", function(basepath, xhttp){
+          parseMD(basepath, xhttp.responseText, render);
+        });
+      }
+      values.push(element);
+    } catch(e) {
+      console.log(basepath)
+      console.log(e.message)
     }
-    values.push(element);
   }
   callback();
 }
