@@ -167,7 +167,18 @@ function baseSort() {
 
 function doSearch() {
   var target = document.getElementById("search").value;
-  var keywords = target.split(" ");
+  var conditions = target.split(" ");
+  var keywords = Array();
+  var filters = Array();
+  cLen = conditions.length;
+  for (i = 0; i < cLen; i++) {
+    if(conditions[i][0] == '-') {
+      filters.push(conditions[i].substring(1));
+    } else {
+      keywords.push(conditions[i]);
+    }
+  }
+
   fileList.filter(function(item) {
     var info = item.values();
     var flag = 0;
@@ -182,6 +193,16 @@ function doSearch() {
       } 
       if (flag == 0) {
         return false;
+      }  
+    }
+
+    fLen = filters.length;
+    for (i = 0; i < fLen; i++) {
+      filter = filters[i];
+      for (k in info) {
+        if (info[k].search(filter) != -1) {
+          return false;
+        }
       }  
     }
     return true;
