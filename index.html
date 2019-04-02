@@ -173,6 +173,11 @@ function doSearch() {
   var keywords = Array();
   var filters = Array();
   var operators = new Object();
+
+  if (GetURLParameter("q") !== target) {
+    window.history.pushState(null, null, "?q=" + target);
+  }
+
   cLen = conditions.length;
   for (i = 0; i < cLen; i++) {
     var locate = conditions[i].search(':');
