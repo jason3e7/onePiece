@@ -173,6 +173,8 @@ function doSearch() {
   var keywords = Array();
   var filters = Array();
   var operators = new Object();
+  var GTs = new Object();
+  var LTs = new Object();
 
   if (GetURLParameter("q") !== target) {
     window.history.pushState(null, null, "?q=" + target);
@@ -181,8 +183,14 @@ function doSearch() {
   cLen = conditions.length;
   for (i = 0; i < cLen; i++) {
     var locate = conditions[i].search(':');
+    var GT_locate = conditions[i].search('>');
+    var LT_locate = conditions[i].search('<');
     if(locate != -1) {
       operators[conditions[i].substring(0, locate)] = conditions[i].substring(locate + 1);
+    } else if(GT_locate != -1) {
+      GTs[conditions[i].substring(0, GT_locate)] = conditions[i].substring(GT_locate + 1);
+    } else if(LT_locate != -1) {
+      LTs[conditions[i].substring(0, LT_locate)] = conditions[i].substring(LT_locate + 1);
     } else if(conditions[i][0] == '-') {
       filters.push(conditions[i].substring(1));
     } else {
@@ -196,6 +204,18 @@ function doSearch() {
 
     for (k in operators) {
       if (info.hasOwnProperty(k) === false || info[k] !== operators[k]) {
+        return false;
+      }
+    }
+
+    for (k in GTs) {
+      if (info.hasOwnProperty(k) === false || info[k] <= GTs[k]) {
+        return false;
+      }
+    }
+
+    for (k in LTs) {
+      if (info.hasOwnProperty(k) === false || info[k] >= LTs[k]) {
         return false;
       }
     }
