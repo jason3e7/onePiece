@@ -44,6 +44,21 @@
 <script src="js/bootstrap.min.js"></script>
 
 <script>
+function GetURLParameter(sParam) {
+  var sPageURL = window.location.search.substring(1),
+    sURLVariables = sPageURL.split('&'),
+    sParameterName,
+    i;
+
+  for (i = 0; i < sURLVariables.length; i++) {
+    sParameterName = sURLVariables[i].split('=');
+
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+    }
+  }
+}
+
 var values = [];
 var dirCount = 0;
 
@@ -120,17 +135,21 @@ function render() {
   if(dirCount === 0) {
   
     fileList = new List('files', options, values);
-
-    fileList.filter(function(item) {
-      if (item.values().ftype == "dir") {
-        return false;
-      }
-      return true;
-    });
-    baseSort();
-
-    showCount();
     
+    q = GetURLParameter("q");
+    if (q === undefined) {
+      fileList.filter(function(item) {
+        if (item.values().ftype == "dir") {
+          return false;
+        }
+        return true;
+      });
+      baseSort();
+      showCount();
+    } else {
+      document.getElementById("search").value = q;
+      doSearch();
+    }
   } else {
     dirCount = dirCount - 1;
   }
