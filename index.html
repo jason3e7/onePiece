@@ -17,12 +17,8 @@
 </div>
 <div class="container" id="files">
   <div class="input-group mb-3">
-    <input class="form-control" id="search" placeholder="Search" />
-  </div>
-  <div class="input-group mb-3">
-    <input class="form-control" id="ratingFilter" placeholder="Rating Filter">&nbsp;
-    <button class="btn btn-success" onclick="doSearch();">Apply</button>&nbsp;
-    <button class="btn btn-danger" onclick="resetList();">Clear</button>
+    <input class="form-control" id="search" placeholder="Search" />&nbsp;
+    <button class="btn btn-success" onclick="doSearch();">Search</button>
   </div>
   <div class="input-group mb-3">
     <div id="output"></div>
@@ -146,19 +142,6 @@ function resetList(){
   fileList.update();
   showCount();
 };
-
-document.getElementById('ratingFilter').addEventListener('change', updateList);
-
-function updateList() {
-  var target = this.value;
-  fileList.filter(function(item) {
-    if (item.values().rating > target) {
-      return false;
-    }
-      return true;
-  });
-  baseSort();
-}
 
 function baseSort() {
   fileList.sort('rating', { order: "asc" });
