@@ -12,12 +12,12 @@
 <body>
 <div class="jumbotron">
   <div class="container">
-    <h1 class="display-3">All in One</h1>
+    <h1 class="display-5">All in One</h1>
   </div>
 </div>
 <div class="container" id="files">
   <div class="input-group mb-3">
-    <input class="form-control" id="search" placeholder="Search" />&nbsp;
+    <input class="form-control" id="search" placeholder="keyword -filter column:value column>value column<value" autofocus="autofocus"/>&nbsp;
     <button class="btn btn-success" onclick="doSearch();">Search</button>
   </div>
   <div class="input-group mb-3">
@@ -75,11 +75,11 @@ function loadFile(basepath, callback) {
 
 function parseMD(basepath, text, callback) {
   var lines = text.split('\n');
-  for(var i = 0; i < lines.length; i+=3){
-    if(lines[i].trim() === "") {
+  for(var i = 0; i < lines.length; i++){
+    if(lines[i].trim() === "" || lines[i][0] !== '*') {
       continue;
     }
-    
+
     try {
       var element = new Object();
       
@@ -92,7 +92,7 @@ function parseMD(basepath, text, callback) {
       if (/^(http|https)?:\/\//i.test(link[2])) {
         path = link[2];
       }
-      if(element.ftype === "md") {
+      if(element.ftype === "md" || element.ftype === "imd") {
         element.description = "<a href='remarkable.html?src=" + path + "'>" + link[1] + "</a>, ";
       } else {
         element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
@@ -138,18 +138,11 @@ function render() {
     
     q = GetURLParameter("q");
     if (q === undefined) {
-      fileList.filter(function(item) {
-        if (item.values().ftype == "dir") {
-          return false;
-        }
-        return true;
-      });
-      baseSort();
-      showCount();
-    } else {
-      document.getElementById("search").value = q;
-      doSearch();
+      q = ""
     }
+    document.getElementById("search").value = q;
+    doSearch();
+
   } else {
     dirCount = dirCount - 1;
   }
