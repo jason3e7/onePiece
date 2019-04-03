@@ -216,6 +216,12 @@ function doSearch() {
   if (GetURLParameter("q") !== target) {
     window.history.pushState(null, null, "?q=" + target);
   }
+  
+  if($("#mode").val() === "0") {
+    console.log("mode:default");
+    conditions.push("-dir");
+    conditions.push("-imd");
+  }
 
   cLen = conditions.length;
   for (i = 0; i < cLen; i++) {
@@ -374,6 +380,20 @@ if (getCookie("showTags") == null) {
 } else {
   $("#showTags").val(getCookie("showTags"));
   $("#showTags").trigger("change");
+}
+
+
+$("#mode").change(function() {
+  var status = $(this).children("option:selected").val();
+  setCookie("mode", status, 3);
+  doSearch();
+});
+
+if (getCookie("mode") == null) {
+  setCookie("mode", "0", 3);
+} else {
+  $("#mode").val(getCookie("mode"));
+  $("#mode").trigger("mode");
 }
 
 </script>
