@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="icon" href="images/kisspng-monkey-d-luffy-vinsmoke-sanji-usopp-gol-d-roger-nice-vector-5ad8d386d404b0.3166113115241593668684.jpg">
   <title>one piece</title>  
+  <style type="text/css">
+  .btn-label {
+    margin-top: 4px;
+    margin-left: 4px;
+  }
+  </style>
 </head>
 
 <body>
@@ -18,10 +24,20 @@
 <div class="container" id="files">
   <div class="input-group mb-3">
     <input class="form-control" id="search" placeholder="keyword -filter column:value column>value column<value" autofocus="autofocus"/>&nbsp;
-    <button class="btn btn-success" onclick="doSearch();">Search</button>
-  </div>
-  <div class="input-group mb-3">
-    <div id="output"></div>
+    <button class="btn btn-success" onclick="doSearch();">Search</button>&nbsp;
+    <button class="btn btn-primary" data-toggle="collapse" data-target=".bar">Tools</button>
+  </div>  
+  <div class="mb-3">
+    <div class="collapse bar">
+      <nav class="navbar bg-light">
+        <select id="showTags">
+          <option value="0" selected>hide tags</option>
+          <option value="1">show tags</option>
+        </select>
+      </nav>
+    </div>
+    <div id="output" class="collapse bar show"></div>
+    <div id="tags" style="display:none"></div>
   </div>
   <table class="table table-sm table-hover">
     <thead>
@@ -44,6 +60,26 @@
 <script src="js/bootstrap.min.js"></script>
 
 <script>
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
 function GetURLParameter(sParam) {
   var sPageURL = window.location.search.substring(1),
     sURLVariables = sPageURL.split('&'),
@@ -61,6 +97,7 @@ function GetURLParameter(sParam) {
 
 var values = [];
 var dirCount = 0;
+var tags = {};
 
 function loadFile(basepath, callback) {
   var xhttp = new XMLHttpRequest();
@@ -168,7 +205,7 @@ function doSearch() {
   var operators = new Object();
   var GTs = new Object();
   var LTs = new Object();
-
+  
   if (GetURLParameter("q") !== target) {
     window.history.pushState(null, null, "?q=" + target);
   }
@@ -240,6 +277,7 @@ function doSearch() {
     return true;
   });
   showCount();
+  showTags();
 }
 
 var input = document.getElementById("search");
@@ -255,6 +293,49 @@ input.addEventListener("keyup", function(event) {
 function showCount() {
   var output = "About " + fileList.update().matchingItems.length + " results"; 
   document.getElementById("output").innerText = output;
+}
+
+function showTags() {
+  items = fileList.matchingItems;
+  for(i = 0; i < items.length; i++) {
+    item = items[i];
+    tagLine = item._values.tags;
+    tagLine = tagLine.split(" ");
+    for (j = 0; j < tagLine.length; j++) {
+      tag = tagLine[j].slice(0, -1);
+      if (tags.hasOwnProperty(tag)) {
+        tags[tag] += 1;
+      } else {
+        tags[tag] = 1;
+      }
+    }  
+  }
+  var templateB = '<button type="button" class="btn btn-secondary btn-sm btn-label">';
+  var templateE = '</button>';
+  var output = '';
+  for(tag in tags) {
+    output += templateB + tag + "(" + tags[tag] + ")" + templateE;
+  }
+  document.getElementById("tags").innerHTML = output;
+}
+
+$("#showTags").change(function() {
+  var tagsStatus = $(this).children("option:selected").val();
+  if (tagsStatus == "1") {
+    $("#tags").show();
+    setCookie("showTags", "1", 3);
+  }
+  if (tagsStatus == "0") {
+    $("#tags").hide();
+    setCookie("showTags", "0", 3);
+  }
+});
+
+if (getCookie("showTags") == null) {
+  setCookie("showTags", "0", 3);
+} else {
+  $("#showTags").val(getCookie("showTags"));
+  $("#showTags").trigger("change");
 }
 
 </script>
