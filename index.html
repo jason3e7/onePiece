@@ -30,10 +30,17 @@
   <div class="mb-3">
     <div class="collapse bar">
       <nav class="navbar bg-light">
-        <select id="showTags">
-          <option value="0" selected>hide tags</option>
-          <option value="1">show tags</option>
-        </select>
+        <div>
+          <select id="showTags">
+            <option value="0" selected>tags:hide</option>
+            <option value="1">tags:show</option>
+          </select>
+          <!-- design first -->
+          <select id="mode">
+            <option value="0" selected>mode:default</option>
+            <option value="1">mode:all</option>
+          </select>
+        </div>
       </nav>
     </div>
     <div id="output" class="collapse bar show"></div>
@@ -292,10 +299,11 @@ input.addEventListener("keyup", function(event) {
 
 function showCount() {
   var output = "About " + fileList.update().matchingItems.length + " results"; 
-  document.getElementById("output").innerText = output;
+  document.getElementById("output").innerHTML = output;
 }
 
 function showTags() {
+  tags = {};
   items = fileList.matchingItems;
   for(i = 0; i < items.length; i++) {
     item = items[i];
@@ -310,14 +318,28 @@ function showTags() {
       }
     }  
   }
-  var templateB = '<button type="button" class="btn btn-secondary btn-sm btn-label">';
-  var templateE = '</button>';
+  var buttonB = '<button type="button" class="btn btn-secondary btn-sm btn-label tag" data-name="';
+  var buttonM = '">';
+  var buttonE = '</button>';
+  var spanB = ' <span class="badge badge-warning">';
+  var spanE = '</span>';
   var output = '';
   for(tag in tags) {
-    output += templateB + tag + "(" + tags[tag] + ")" + templateE;
+    output += buttonB + tag + buttonM + tag + spanB + tags[tag] + spanE + buttonE;
   }
   document.getElementById("tags").innerHTML = output;
 }
+
+$("body").on('click', ".tag",function(){
+    var search = document.getElementById("search").value;
+    if (search !== "") {
+      search = search + " " + $(this).data('name');
+    } else {
+      search = $(this).data('name');
+    }
+    document.getElementById("search").value = search;
+    doSearch();
+});
 
 $("#showTags").change(function() {
   var tagsStatus = $(this).children("option:selected").val();
