@@ -324,9 +324,25 @@ function showTags() {
   var spanB = ' <span class="badge badge-warning">';
   var spanE = '</span>';
   var output = '';
-  for(tag in tags) {
-    output += buttonB + tag + buttonM + tag + spanB + tags[tag] + spanE + buttonE;
+  for (i = 0; i < 15; i++) {
+    var maxCount = 0;
+    var maxTag = 0; 
+    for(tag in tags) {
+      if (tags[tag] > maxCount) {
+        maxTag = tag;
+        maxCount = tags[tag];
+      }
+    }
+    output += buttonB + maxTag + buttonM + maxTag + spanB + maxCount + spanE + buttonE;
+    delete tags[maxTag];
+    if(Object.keys(tags).length === 0) {
+      break;
+    }
   }
+  if(Object.keys(tags).length !== 0) {
+    output += '<button type="button" class="btn btn-secondary btn-sm btn-label" disabled>...etc</button>';
+  }
+
   document.getElementById("tags").innerHTML = output;
 }
 
