@@ -141,7 +141,18 @@ function parseMD(basepath, text, callback) {
       } else {
         element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
       }
-      element.description += lines[i + 2].match(/  \* (.*)/is)[1];
+      
+      if(element.ftype !== "dir") {
+        console.log(lines[i + 2].match(/  \* (.*)/is)[1]);
+        line2 = lines[i + 2].match(/  \* (.*)/is)[1];
+        match = line2.match(/\\#to:(.*), |\\#to:(.*)./is);
+        if (match[2] == undefined) {
+          element.description += match[1];
+        }
+        if (match[1] == undefined) {
+          element.description += match[2];
+        }
+      }
 
       if(element.ftype === "dir") {
         dirCount = dirCount + 1;
