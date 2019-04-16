@@ -143,7 +143,6 @@ function parseMD(basepath, text, callback) {
       }
       
       if(element.ftype !== "dir") {
-        console.log(lines[i + 2].match(/  \* (.*)/is)[1]);
         line2 = lines[i + 2].match(/  \* (.*)/is)[1];
         match = line2.match(/\\#to:(.*), |\\#to:(.*)./is);
         if (match[2] == undefined) {
