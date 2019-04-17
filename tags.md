@@ -4,7 +4,7 @@
 * \#css, 關於 css 或者 是 css.
 * \#js, 關於 js 或者 是 js.
 * \#tag, 關於 tag.
-* \#20190402, 20190402新增的.
+* \#daily, 每日的.
 * \#tag1, sample.
 * \#tag2, sample.
 * \#tag3, sample.
@@ -12,3 +12,5 @@
 * \#sample2, sample.
 * \#sample3, sample.
 * \#image, 圖檔.
+* \#link, 連結庫.
+* \#google, 關於google服務.
