@@ -117,6 +117,18 @@ function loadFile(basepath, callback) {
   xhttp.send();
 };
 
+function loadImd(filepath, callback) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      callback(filepath, this);
+    }
+  };
+  xhttp.open("GET", filepath, true);
+  xhttp.send();
+};
+
+
 function parseMD(basepath, text, callback) {
   var lines = text.split('\n');
   for(var i = 0; i < lines.length; i++){
@@ -159,6 +171,14 @@ function parseMD(basepath, text, callback) {
           parseMD(basepath, xhttp.responseText, render);
         });
       }
+
+      if(element.ftype === "imd" && link[2] != "index.md") {
+        dirCount = dirCount + 1;
+        loadImd(path, function(basepath, xhttp){
+          parseMD(basepath, xhttp.responseText, render);
+        });
+      }
+
       values.push(element);
     } catch(e) {
       console.log(basepath)

@@ -63,7 +63,7 @@
 ### link ###
 * \#mtime:20190416, \#rating:10, \#type:link. [google](https://www.google.com)
   * \#google.
-  * \#to:資料夾的index(索引). \#from:. 
+  * \#to:資料夾的index(索引), \#from:. 
   * \#ctime:20190402, \#dtime:99999999, 資料過時或不用就可以刪除.
   
 ### dir ###
