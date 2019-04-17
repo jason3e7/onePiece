@@ -105,6 +105,7 @@ function GetURLParameter(sParam) {
 var values = [];
 var dirCount = 0;
 var tags = {};
+var now = (new Date()).toISOString().slice(0,10).replace(/-/g,"");
 
 function loadFile(basepath, callback) {
   var xhttp = new XMLHttpRequest();
@@ -251,6 +252,7 @@ function doSearch() {
     console.log("mode:default");
     conditions.push("-dir");
     conditions.push("-imd");
+    conditions.push("mtime:" + now);
   }
 
   cLen = conditions.length;
