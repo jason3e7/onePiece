@@ -210,7 +210,8 @@ function render() {
   if(dirCount === 0) {
   
     fileList = new List('files', options, values);
-    
+    baseSort();
+
     q = GetURLParameter("q");
     if (q === undefined) {
       q = ""
@@ -245,7 +246,7 @@ function doSearch() {
   var LTs = new Object();
   
   if (GetURLParameter("q") !== target) {
-    window.history.pushState(null, null, "?q=" + target);
+    window.history.pushState(null, null, "?q=" + target.replace(/#/g, "%23"));
   }
   
   if($("#mode").val() === "0") {
@@ -413,7 +414,6 @@ if (getCookie("showTags") == null) {
   $("#showTags").val(getCookie("showTags"));
   $("#showTags").trigger("change");
 }
-
 
 $("#mode").change(function() {
   var status = $(this).children("option:selected").val();
