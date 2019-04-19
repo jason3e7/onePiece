@@ -145,10 +145,16 @@ function parseMD(basepath, text, callback) {
       element.ftype = lines[i].match(/\\#type:(\w*)/is)[1];
       element.tags = lines[i + 1].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
       link = lines[i].match(/\[(.+)\]\(([^\)]+)\)/);
+
+      if(element.ftype === "imd" && link[2] != "index.md") {
+        basepath = basepath.substring(0,basepath.lastIndexOf("/") + 1);
+      }
+
       path = basepath + link[2];
       if (/^(http|https)?:\/\//i.test(link[2])) {
         path = link[2];
       }
+
       if(element.ftype === "md" || element.ftype === "imd") {
         element.description = "<a href='remarkable.html?src=" + path + "'>" + link[1] + "</a>, ";
       } else {
