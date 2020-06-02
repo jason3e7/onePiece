@@ -4,8 +4,6 @@
 
 ### time ###
 * mtime:最後更新時間(number).
-* ctime:創立的時間(number).
-* dtime:預計刪除時間(number), 後面會有刪除的原因(utf8), find first ", ".
 
 ### rating ###
 * number
@@ -14,9 +12,12 @@
 * file
   * md
     * imd, index.md
-* link
 * dir
   * pdir, package.dir
+* link
+* groupIndex
+  * simd, specialIndex.md
+  * gimd, groupIndex.md
 
 ### [檔名] ###
 * charset, utf8, find first [, reverse find first ](
@@ -30,56 +31,102 @@
 ### to ###
 * 下次再次使用的情境(utf8, 不包含(", ")), find first ", " 
 
-### from ###
-* ref(utf8, 不包含(", ")), reverse find first "."
-
 ## sample ##
 
 ### file ###
-* \#mtime:20190416, \#rating:10, \#type:file. [sample](sample.txt)
-  * \#index, \#test.
-  * \#to:資料夾的index(索引), \#from:自己創立. 
-  * \#ctime:20190416, \#dtime:99999999, 資料過時或不用就可以刪除.
+* \#rating:10, \#type:file, \#mtime:20190416. [sample](sample.txt)
+  * \#sample, \#test.
+  * \#to:資料夾的index(索引).
 
 ### md ###
-* \#mtime:20190416, \#rating:10, \#type:md. [index](index.md)
-  * \#index.
-  * \#to:說明資料, \#from:自己創立. 
-  * \#ctime:20190402, \#dtime:99999999, 資料過時或不用就可以刪除.
+* \#rating:10, \#type:md, \#mtime:20190416. [index](index.md)
+  * \#sample.
+  * \#to:說明資料.
 
 ### imd ###
-* \#mtime:20190416, \#rating:10, \#type:imd. [index](index.md)
-  * \#index.
-  * \#to:為了什麼建立的.
-  * \#ctime:20190402.
+* \#rating:10, \#type:imd, \#mtime:20190416. [index](index.md)
+  * \#sample.
 
-* 不用 from
-  * 因為是自己寫的結果 
-* 不用 dtime
-  * dtime 其他資料都消逝就可以刪除了.
-* 會進行 parser, index.md 預設就會 parse(不要 parse 兩次)
-* 某程度來說是為了 link group.
+* 自動標 index 的 tag
+* to 留空, 就是索引
 
-### link ###
-* \#mtime:20190416, \#rating:10, \#type:link. [google](https://www.google.com)
-  * \#google.
-  * \#to:資料夾的index(索引), \#from:. 
-  * \#ctime:20190402, \#dtime:99999999, 資料過時或不用就可以刪除.
-  
 ### dir ###
-* \#mtime:20190416, \#rating:10, \#type:dir. [sampleDir](sampleDir)
-  * \#index.
+* \#rating:10, \#type:dir, \#mtime:20190416. [sampleDir](sampleDir)
+  * \#sample.
 
 * 自動讀取底下的 index.md 
-* 不用 to 和 from
+* 不用 to
   * 因為是 group 的結果
-* 不用 ctime 和 dtime
-  * dtime 其他資料都消逝就可以刪除了.
 
 ### pdir ###
-* \#mtime:20190416, \#rating:10, \#type:pdir. [samplePDir](samplePDir)
-  * \#index.
+* \#rating:10, \#type:pdir, \#mtime:20190416. [samplePDir](samplePDir)
+  * \#sample.
   * \#to:為了什麼把東西都放在同一個資料夾.
- 
-* 不用 ctime 和 dtime
-  * dtime 其他資料都消逝就可以刪除了.
+
+### link ###
+* \#rating:10, \#type:link, \#mtime:20190416. [google](https://www.google.com)
+  * \#google.
+  * \#to:Search工具.
+
+### group index ###
+#### simd ####
+* 特化的類型, 因為類型靠樣子去區分, 全都只有 resource
+* 相同時間, 不同目的, 不同類型, 不同屬性
+  * 因為時間相同, 多用於完成或封存或log
+* 自動標 index 的 tag
+* to 留空, 就是索引
+* \#rating:20, \#mtime:20200602, \#type:simd. [index](index.md)
+  * \#sample.
+
+```
+# 20200602 #
+* \#rating:20, [google](https://www.google.com)
+  * \#search
+  * \#to:為了什麼建立的.
+* \#rating:60, [youTube](https://www.youtube.com/)
+  * \#video.
+  * \#to:為了什麼建立的.
+* \#rating:60, [dir](testdir/)
+  * \#test.
+  * \#to:為了什麼建立的.
+* \#rating:60, [file](test.txt)
+  * \#test.
+  * \#to:為了什麼建立的.
+* \#rating:60, [md](test.md)
+  * \#test.
+  * \#to:為了什麼建立的.
+```
+
+* 配套措施, 要能自動全部帶入一樣(目的, 類型, 屬性)
+* 配套措施, 要能和imd互轉
+* link, pdir, file, md, 依照特徵判斷
+  * link, http, https
+  * dir, /
+  * md, .md
+  * file, other
+
+### gimd ###
+* 時間, 目的, 類型, 屬性
+* \#rating:20, \#mtime:20200602, \#type:gimd. [intent](intent.md)
+  * \#sample.
+  * \#to:為了什麼建立的.
+
+```
+# 20200602, 為了什麼建立的, \#type:link, \#tag1, \#tag2 #
+* \#rating:20, [google](https://www.google.com)
+* \#rating:60, [youTube](https://www.youtube.com/)
+```
+* 配套措施, 要能和imd互轉
+* ftype
+  * link, pdir, file, md 是比較單純的
+  * imd, dir 要試一下
+
+## 調整說明 ##
+* 加入 group 的概念, 並刪掉多個欄位
+  * 因為過往使用的時候, 花費很多時間, 故簡化之
+  * groupIndex, 是"群組化索引"的概念, 本質還是索引
+* 檢視上還是以時間為主, 但是因為不常改, 之後清單會採取自動產生, 所以用編輯上比較常改的 rating 為第一順位
+  * 方便編輯上比較常改的 ftype 為第二順位
+
+### 未來 ###
+* groupIndex, 合成一個, 並可以任意欄位 group
