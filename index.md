@@ -1,34 +1,28 @@
 # onePiece #
-* \#mtime:20190402, \#rating:10, \#type:imd. [index](index.md)
+* \#rating:10, \#type:imd, \#mtime:20190402. [index](index.md)
   * \#index.
-  * \#to:這個資料夾的index.
-  * \#ctime:20190402.
-* \#mtime:20190402, \#rating:10, \#type:file. [index.html](index.html)
+* \#rating:10, \#type:file, \#mtime:20190402. [index.html](index.html)
   * \#html.
-  * \#to:功能首頁, \#from:self.
-  * \#ctime:20190402, \#dtime:99999999, 功能廢棄的時候.
-* \#mtime:20190402, \#rating:10, \#type:file. [remarkable.html](remarkable.html)
+  * \#to:功能首頁
+* \#rating:10, \#type:file, \#mtime:20190402. [remarkable.html](remarkable.html)
   * \#html.
-  * \#to:markdown viewer, \#from:remarkable.js. 
-  * \#ctime:20190402, \#dtime:99999999, 功能廢棄的時候.
-* \#mtime:20190402, \#rating:20, \#type:md. [README.md](README.md)
+  * \#to:markdown viewer.
+* \#rating:20, \#type:md, \#mtime:20190402. [README.md](README.md)
   * \#README.
-  * \#to:套件使用說明, \#from:self.
-  * \#ctime:20190402, \#dtime:99999999, 功能廢棄的時候.
-* \#mtime:20190402, \#rating:60, \#type:pdir. [css](css)
+  * \#to:套件使用說明.
+* \#rating:60, \#type:pdir, \#mtime:20190402. [css](css)
   * \#css.
   * \#to:套件相依資料夾.
-* \#mtime:20190402, \#rating:60, \#type:pdir. [js](js)
+* \#rating:60, \#type:pdir, \#mtime:20190402. [js](js)
   * \#js.
   * \#to:套件相依資料夾.
-* \#mtime:20190402, \#rating:60, \#type:pdir. [images](images)
+* \#rating:60, \#type:pdir, \#mtime:20190402. [images](images)
   * \#image.
   * \#to:套件相依資料夾.
-* \#mtime:20190402, \#rating:60, \#type:dir. [20190402](20190402)
+* \#rating:60, \#type:dir, \#mtime:20190402. [20190402](20190402)
   * \#20190402.
-* \#mtime:20190416, \#rating:05, \#type:md. [tags](tags.md)
+* \#rating:05, \#type:md, \#mtime:20190416. [tags](tags.md)
   * \#tag.
-  * \#to:tag清單和說明, \#from:self.
-  * \#ctime:20190416, \#dtime:99999999, 功能廢棄的時候.
-* \#mtime:20190417, \#rating:60, \#type:dir. [20190417](20190417)
+  * \#to:tag清單和說明.
+* \#rating:60, \#type:dir, \#mtime:20190417. [20190417](20190417)
   * \#daily.
