@@ -50,6 +50,13 @@
 * 自動標 index 的 tag
 * to 留空, 就是索引
 
+#### feature 跨網域 ####
+* 第二行是 json config, option
+  * `config = JSON.parse('{"basePath":"/"}')`
+  * sample, `+ config : '{"basePath":"/"}'`, 用加號作為 parse 的差異
+  * 是 option, 一但有, 就是再 parseMD 更換 basepath.
+  * 測試要複製一份放到另外一個網域
+
 ### dir ###
 * \#rating:10, \#type:dir, \#mtime:20190416. [sampleDir](sampleDir)
   * \#sample.
@@ -83,7 +90,7 @@
 * \#rating:20, [google](https://www.google.com)
   * \#search
   * \#to:為了什麼建立的.
-* \#rating:60, [youTube](https://www.youtube.com/)
+* \#rating:60, [Altoro Mutual](http://demo.testfire.net/)
   * \#video.
   * \#to:為了什麼建立的.
 * \#rating:60, [dir](testdir/)
@@ -92,7 +99,7 @@
 * \#rating:60, [file](test.txt)
   * \#test.
   * \#to:為了什麼建立的.
-* \#rating:60, [md](test.md)
+* \#rating:60, [test](test.md)
   * \#test.
   * \#to:為了什麼建立的.
 ```
