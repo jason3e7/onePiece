@@ -1,6 +1,6 @@
 # 20200607 #
 * \#rating:20, [google](https://www.google.com)
-  * \#search
+  * \#search.
   * \#to:sample.
 * \#rating:60, [Altoro Mutual](http://demo.testfire.net/)
   * \#demo.
