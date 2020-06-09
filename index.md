@@ -19,12 +19,8 @@
 * \#rating:60, \#type:pdir, \#mtime:20190402. [images](images)
   * \#image.
   * \#to:套件相依資料夾.
-* \#rating:60, \#type:dir, \#mtime:20190402. [20190402](20190402)
-  * \#20190402.
 * \#rating:05, \#type:md, \#mtime:20190416. [tags](tags.md)
   * \#tag.
   * \#to:tag清單和說明.
-* \#rating:60, \#type:dir, \#mtime:20190417. [20190417](20190417)
-  * \#daily.
-* \#rating:60, \#type:dir, \#mtime:20200607. [20200607](20200607)
-  * \#daily.
+* \#rating:60, \#type:gimd, \#mtime:20190609. [daily](daily.md)
+  * \#20190609.
