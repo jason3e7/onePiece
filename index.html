@@ -129,6 +129,143 @@ function loadImd(filepath, callback) {
   xhttp.send();
 };
 
+function parseSIMD(basepath, text, callback) {
+  var lines = text.split('\n');
+  var mtime = "";
+  for(var i = 0; i < lines.length; i++){
+
+    if(i === 0 && lines[0][0] === '#') {
+      mtime = lines[0].match(/# (\d*) #/is)[1];
+      continue;
+    }
+
+    if(lines[i].trim() === "" || lines[i][0] !== '*') {
+      continue;
+    }
+
+    try {
+      var element = new Object();
+
+      element.mtime = mtime;
+      element.rating = lines[i].match(/\\#rating:(\w*)/is)[1];
+      element.ftype = "";
+      element.tags = lines[i + 1].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
+      link = lines[i].match(/\[(.+)\]\(([^\)]+)\)/);
+
+      basepath = basepath.substring(0,basepath.lastIndexOf("/") + 1);
+
+      path = basepath + link[2];      
+      if (/^(http|https)?:\/\//i.test(link[2])) {
+        path = link[2];
+        element.ftype = "link"
+      } else if (/.*\/$/i.test(link[2])) {
+        element.ftype = "pdir"
+      } else if (/.*\.md$/i.test(link[2])) {
+        element.ftype = "md"
+      } else {
+        element.ftype = "file"
+      }
+
+      if(element.ftype === "md" || element.ftype === "imd" || element.ftype === "simd" || element.ftype === "gimd") {
+        element.description = "<a href='remarkable.html?src=" + path + "'>" + link[1] + "</a>, ";
+      } else {
+        element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
+      }
+      
+      element.description += (lines[i + 2].match(/  \* \\#to:(.*)./is)[1]);
+      values.push(element);
+    } catch(e) {
+      console.log(basepath);
+      console.log(e.message);
+    }
+  }
+  callback();
+}
+
+function parseGIMD(basepath, text, callback) {
+  var lines = text.split('\n');
+  var mtime = "";
+  var ftype = "";
+  var tags = "";
+
+  for(var i = 0; i < lines.length; i++){
+
+    if(i === 0 && lines[0][0] === '#') {
+      group = lines[0].match(/# (\d*), (\w*), \\#type:(\w*), (.*) #/is);
+      mtime = group[1];
+      to = group[2];
+      ftype = group[3];
+      tags = group[4].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
+      continue;
+    }
+
+    if(lines[i].trim() === "" || lines[i][0] !== '*') {
+      continue;
+    }
+
+    try {
+      var element = new Object();
+
+      element.mtime = mtime;
+      element.rating = lines[i].match(/\\#rating:(\w*)/is)[1];
+      element.ftype = ftype;
+      element.tags = tags;
+      link = lines[i].match(/\[(.+)\]\(([^\)]+)\)/);
+ 
+      if((/.*\.md$/i.test(basepath)) && link[2] != "index.md")  {
+        basepath = basepath.substring(0,basepath.lastIndexOf("/") + 1);
+      }
+
+      path = basepath + link[2];      
+      if (/^(http|https)?:\/\//i.test(link[2])) {
+        path = link[2];
+      }
+
+      if(element.ftype === "md" || element.ftype === "imd" || element.ftype === "simd" || element.ftype === "gimd") {
+        element.description = "<a href='remarkable.html?src=" + path + "'>" + link[1] + "</a>, ";
+      } else {
+        element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
+      }
+      
+      element.description += to;
+
+      if(element.ftype === "dir") {
+        dirCount = dirCount + 1;
+        loadFile(path + "/", function(basepath, xhttp){
+          parseMD(basepath, xhttp.responseText, render);
+        });
+      }
+
+      if(element.ftype === "imd" && link[2] != "index.md") {
+        dirCount = dirCount + 1;
+        loadImd(path, function(basepath, xhttp){
+          parseMD(basepath, xhttp.responseText, render);
+        });
+      }
+
+      if(element.ftype === "simd") {
+        dirCount = dirCount + 1;
+        loadImd(path, function(basepath, xhttp){
+          parseSIMD(basepath, xhttp.responseText, render);
+        });
+      }
+
+      if(element.ftype === "gimd") {
+        dirCount = dirCount + 1;
+        loadImd(path, function(basepath, xhttp){
+          parseGIMD(basepath, xhttp.responseText, render);
+        });
+      }
+
+      values.push(element);
+    } catch(e) {
+      console.log(basepath);
+      console.log(e.message);
+    }
+  }
+  callback();
+}
+
 
 function parseMD(basepath, text, callback) {
   var lines = text.split('\n');
@@ -146,22 +283,23 @@ function parseMD(basepath, text, callback) {
       element.tags = lines[i + 1].match(/\\#(\w*)[,\.]/gis).join(" ").replace(/\\/g, "")
       link = lines[i].match(/\[(.+)\]\(([^\)]+)\)/);
 
-      if(element.ftype === "imd" && link[2] != "index.md") {
+      if((/.*\.md$/i.test(basepath)) && link[2] != "index.md") {
         basepath = basepath.substring(0,basepath.lastIndexOf("/") + 1);
       }
 
       path = basepath + link[2];
+
       if (/^(http|https)?:\/\//i.test(link[2])) {
         path = link[2];
       }
 
-      if(element.ftype === "md" || element.ftype === "imd") {
+      if(element.ftype === "md" || element.ftype === "imd" || element.ftype === "simd" || element.ftype === "gimd") {
         element.description = "<a href='remarkable.html?src=" + path + "'>" + link[1] + "</a>, ";
       } else {
         element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
       }
       
-      if(element.ftype !== "dir") {
+      if(element.ftype !== "dir" && element.ftype !== "imd" && basepath !== "") {
         line2 = lines[i + 2].match(/  \* (.*)/is)[1];
         match = line2.match(/\\#to:(.*), |\\#to:(.*)./is);
         if (match[2] == undefined) {
@@ -183,6 +321,20 @@ function parseMD(basepath, text, callback) {
         dirCount = dirCount + 1;
         loadImd(path, function(basepath, xhttp){
           parseMD(basepath, xhttp.responseText, render);
+        });
+      }
+
+      if(element.ftype === "simd") {
+        dirCount = dirCount + 1;
+        loadImd(path, function(basepath, xhttp){
+          parseSIMD(basepath, xhttp.responseText, render);
+        });
+      }
+
+      if(element.ftype === "gimd") {
+        dirCount = dirCount + 1;
+        loadImd(path, function(basepath, xhttp){
+          parseGIMD(basepath, xhttp.responseText, render);
         });
       }
 
