@@ -300,7 +300,7 @@ function parseMD(basepath, text, callback) {
         element.description = "<a href='" + path + "'>" + link[1] + "</a>, ";
       }
       
-      if(element.ftype !== "dir" && element.ftype !== "imd" && basepath !== "") {
+      if(element.ftype !== "dir" && element.ftype !== "imd" && basepath !== "" && element.ftype !== "simd") {
         line2 = lines[i + 2].match(/  \* (.*)/is)[1];
         match = line2.match(/\\#to:(.*), |\\#to:(.*)./is);
         if (match[2] == undefined) {
